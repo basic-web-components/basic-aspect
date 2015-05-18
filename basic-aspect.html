@@ -28,13 +28,28 @@ window.Basic.Aspect = {
   },
 
   created: function() {
+
     if (typeof this.contribute === 'undefined') {
       // The basic-aspect class contributes no members itself, but defines a
       // default, empty contribute property so that it (and any subclass) is
       // recognizable as an aspect.
       this.contribute = {};
     }
+
     new Basic.Collective(this);
+
+    // Assimilate any declared aspects.
+    if (this.aspects) {
+      this.aspects.forEach(function(aspect) {
+        // Assimilate a copy of the aspect, rather than the aspect itself,
+        // so that the aspect can be added to many components.
+        var clone = {};
+        for (var key in aspect) {
+          clone[key] = aspect[key];
+        }
+        this.assimilate(clone);
+      }.bind(this));
+    }
   },
 
   properties: {
